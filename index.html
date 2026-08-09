@@ -337,7 +337,7 @@
   .polaroid:nth-child(odd) { transform: rotate(-3deg); }
   .polaroid:nth-child(even) { transform: rotate(3deg); }
   .polaroid:hover { transform: rotate(0deg) scale(1.05); box-shadow: var(--shadow); z-index: 5; }
-  .mem-tag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 10px; z-index: 3; }
+  .mem-tag { position: absolute; top: 8px; right: 8px; font-size: 10px; z-index: 3; }
 
   #btn-to-wishes { background: var(--turquoise); color: #fff; }
 
@@ -438,12 +438,18 @@
     #footer {
       padding: 20px 15px;
       justify-content: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
     }
     .footer-content {
       padding: 0 10px;
     }
     .footer-star {
       font-size: 16px;
+    }
+    .final-title {
+      margin-top: 20px;
     }
   }
 </style>
@@ -772,10 +778,15 @@ btnNo.addEventListener('click', ()=>{
     }, 300);
   }
   
-  giftTwist.classList.add('show');
+  // Hide game buttons
   btnYes.style.display='none';
   btnNo.style.display='none';
   taunt.classList.remove('show');
+  
+  // Show twist message after delay
+  setTimeout(() => {
+    giftTwist.classList.add('show');
+  }, 1500);
 });
 
 document.getElementById('btn-continue').addEventListener('click', ()=>{
