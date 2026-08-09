@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Birthday, Mahesh! 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF2CE;
+    --paper: #FFFBF0;
+    --ink: #251A33;
+    --pink: #FF4D86;
+    --pink-deep: #E23372;
+    --purple: #7C4DFF;
+    --purple-deep: #5B2BE0;
+    --turquoise: #00BFA6;
+    --yellow: #FFC94D;
+    --shadow: 0 16px 36px rgba(37,26,51,0.18);
+    --shadow-sm: 0 8px 20px rgba(37,26,51,0.12);
+    --dash: repeating-linear-gradient(90deg, var(--ink) 0 10px, transparent 10px 20px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; width: 100vw; overflow: hidden; }
+  
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+  
+  h1, h2, h3, .display { font-family: 'Baloo 2', cursive; }
+  .mono { font-family: 'Space Mono', monospace; letter-spacing: 0.08em; }
+
+  ::selection { background: var(--pink); color: #fff; }
+
+  /* Canvas Overlay */
+  #confetti-canvas {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* Cover Screen Modal */
+  #cover {
+    position: fixed; inset: 0; z-index: 9000;
+    background: radial-gradient(circle at 30% 20%, #8a5cff 0%, #6a2fe6 45%, #3d1a8f 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 22px; text-align: center;
+    cursor: pointer; transition: opacity .7s ease, visibility .7s ease;
+    padding: 24px;
+  }
+  #cover.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  
+  .cover-box {
+    font-size: clamp(64px, 18vw, 110px);
+    animation: wiggle 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.35));
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-6deg) scale(1); }
+    50% { transform: rotate(6deg) scale(1.08); }
+  }
+  .cover-title {
+    color: #fff; font-size: clamp(24px, 6vw, 42px); font-weight: 700;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  }
+  .cover-sub {
+    color: #FFE7B3; font-size: clamp(13px, 3.4vw, 17px);
+    letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Space Mono', monospace;
+    animation: pulseText 1.6s ease-in-out infinite;
+  }
+  @keyframes pulseText { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+  .cover-ring {
+    position: absolute; border: 2px dashed rgba(255,255,255,0.35); border-radius: 50%;
+    animation: spin 30s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Pagination Wrapper */
+  .page-container {
+    width: 100%; height: 100%; position: relative;
+    overflow: hidden;
+  }
+
+  /* Page Sections */
+  .page {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: clamp(20px, 4vw, 40px);
+    opacity: 0; visibility: hidden;
+    transform: translateY(30px) scale(0.97);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .page.active {
+    opacity: 1; visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  /* Global Ticket Tag */
+  .ticket-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: var(--yellow);
+    padding: 6px 16px; border-radius: 999px;
+    font-family: 'Space Mono', monospace; font-size: clamp(11px, 2.6vw, 13px);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Global Buttons */
+  .btn {
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: clamp(15px, 3.6vw, 19px);
+    border: none; border-radius: 999px; padding: 14px 32px; cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink); transition: transform .15s ease, box-shadow .15s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn:active { transform: translateY(2px); box-shadow: 2px 2px 0 var(--ink); }
+
+  /* Floating Floating Balloons */
+  .balloon {
+    position: absolute; bottom: -140px; width: 60px; height: 76px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0.85; pointer-events: none;
+    animation-name: floatUp; animation-timing-function: ease-in; animation-iteration-count: infinite;
+  }
+  .balloon::after {
+    content: ''; position: absolute; left: 50%; top: 100%; width: 2px; height: 60px;
+    background: rgba(37,26,51,0.35); transform: translateX(-50%);
+  }
+  .balloon::before {
+    content: ''; position: absolute; left: 50%; bottom: -14px; width: 0; height: 0;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 10px solid inherit;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.95; }
+    50% { transform: translateY(-55vh) translateX(30px) rotate(6deg); }
+    100% { transform: translateY(-115vh) translateX(-20px) rotate(-6deg); opacity: 0.3; }
+  }
+
+  /* PAGE 1: HERO */
+  #hero { background: linear-gradient(180deg, var(--cream) 0%, #FFE9B8 100%); }
+  .hero-inner { text-align: center; max-width: 720px; }
+  .hero-name {
+    font-size: clamp(48px, 14vw, 110px); font-weight: 800; line-height: 0.95;
+    color: var(--ink); margin: 16px 0;
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 2px;
+  }
+  .hero-name span {
+    display: inline-block; opacity: 0; transform: translateY(40px) rotate(-6deg);
+    animation: letterIn .7s cubic-bezier(.2,1.4,.4,1) forwards;
+    background: linear-gradient(180deg, var(--pink) 0%, var(--purple) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  @keyframes letterIn { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
+  .hero-sub {
+    font-size: clamp(15px, 3.5vw, 20px); color: #5a4a6b; font-weight: 600;
+    margin: 14px auto 26px; max-width: 480px;
+  }
+
+  .countdown { display: flex; gap: clamp(8px, 2.5vw, 18px); justify-content: center; margin-bottom: 28px; }
+  .cd-box {
+    background: var(--paper); border: 3px solid var(--ink); border-radius: 16px;
+    padding: clamp(10px, 2.6vw, 16px) clamp(12px, 3.2vw, 20px);
+    min-width: 68px; box-shadow: 5px 5px 0 var(--ink);
+  }
+  .cd-box.pulse { animation: pulseBox .4s ease; }
+  @keyframes pulseBox { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .cd-num { font-family: 'Baloo 2', cursive; font-size: clamp(24px, 6vw, 38px); font-weight: 700; color: var(--pink-deep); line-height: 1; }
+  .cd-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 4px; }
+
+  #btn-start { background: var(--purple); color: #fff; }
+
+  /* PAGE 2: GIFT GAME */
+  #gift { background: linear-gradient(180deg, #FFE9B8 0%, #FFD9E6 100%); }
+  .gift-card {
+    background: var(--paper); border-radius: 28px; box-shadow: var(--shadow);
+    max-width: 600px; width: 100%; padding: clamp(24px, 5vw, 42px);
+    text-align: center; position: relative; border: 3px solid var(--ink);
+  }
+  .gift-card::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -2px; height: 6px;
+    background: var(--dash); background-size: 20px 6px;
+  }
+  .gift-q { font-size: clamp(24px, 5.5vw, 36px); font-weight: 700; margin: 14px 0 6px; color: var(--ink); }
+  .gift-hint { color: #6b5a7c; font-size: clamp(13px, 3vw, 16px); margin-bottom: 22px; }
+
+  .game-area {
+    position: relative; height: clamp(180px, 35vw, 220px); width: 100%;
+    margin: 0 auto 12px;
+  }
+  #btn-no {
+    background: var(--turquoise); color: #fff;
+    position: absolute; bottom: 10px; left: calc(50% - 74px); z-index: 2;
+  }
+  #btn-yes {
+    background: var(--pink); color: #fff;
+    position: absolute; top: 10px; left: calc(50% - 90px);
+    z-index: 3; white-space: nowrap;
+    transition: top .28s cubic-bezier(.3,1.4,.5,1), left .28s cubic-bezier(.3,1.4,.5,1);
+  }
+  .taunt {
+    position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--yellow); font-family: 'Space Mono', monospace;
+    font-size: 12px; padding: 4px 10px; border-radius: 8px; white-space: nowrap;
+    opacity: 0; transition: opacity .25s ease; pointer-events: none;
+  }
+  .taunt.show { opacity: 1; }
+
+  .gift-twist {
+    margin-top: 14px; display: none; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .gift-twist.show { display: flex; }
+  .gift-twist p { font-weight: 600; font-size: clamp(14px, 3.4vw, 17px); color: var(--ink); max-width: 460px; }
+  #btn-continue { background: var(--purple); color: #fff; }
+
+  /* PAGE 3: MEMORIES GALLERY */
+  #memories { background: var(--cream); }
+  .mem-inner { max-width: 900px; width: 100%; text-align: center; }
+  .mem-head { margin-bottom: 24px; }
+  .mem-title { font-size: clamp(26px, 5.5vw, 40px); font-weight: 700; margin-top: 8px; }
+
+  /* Responsive Grid Carousel for Laptop / Mobile */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .polaroid {
+    background: #fff; padding: 12px 12px 42px; box-shadow: var(--shadow-sm);
+    border-radius: 4px; position: relative; transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .polaroid img { width: 100%; height: auto; object-fit: contain; border-radius: 2px; display: block; max-height: 200px; }
+  .polaroid figcaption {
+    position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center;
+    font-family: 'Baloo 2', cursive; font-size: clamp(13px, 2.8vw, 15px); color: var(--ink); line-height: 1.2;
+  }
+  .polaroid:nth-child(odd) { transform: rotate(-3deg); }
+  .polaroid:nth-child(even) { transform: rotate(3deg); }
+  .polaroid:hover { transform: rotate(0deg) scale(1.05); box-shadow: var(--shadow); z-index: 5; }
+  .mem-tag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 10px; z-index: 3; }
+
+  #btn-to-wishes { background: var(--turquoise); color: #fff; }
+
+  /* PAGE 4: WISHES */
+  #wishes {
+    background: linear-gradient(160deg, var(--purple) 0%, var(--purple-deep) 55%, #3a1a8c 100%);
+    color: #fff;
+  }
+  .wish-inner { max-width: 660px; text-align: center; position: relative; z-index: 2; }
+  .quote-mark { font-family: 'Baloo 2', cursive; font-size: clamp(60px, 12vw, 90px); color: var(--yellow); line-height: 0.4; }
+  .wish-text { font-size: clamp(16px, 3.8vw, 22px); font-weight: 600; line-height: 1.6; margin: 18px 0 24px; }
+  .wish-sign { font-family: 'Baloo 2', cursive; font-size: clamp(18px, 4.2vw, 26px); color: var(--yellow); margin-bottom: 28px; }
+  .wish-inner .ticket-tag { margin-bottom: 14px; background: var(--yellow); color: var(--ink); }
+  #btn-to-footer { background: var(--pink); color: #fff; }
+
+  /* PAGE 5: FOOTER & FINALE */
+  #footer { 
+    background: var(--ink); 
+    color: #fff; 
+    text-align: center; 
+    gap: 20px; 
+    position: relative;
+    overflow: hidden;
+  }
+  .final-title { 
+    font-size: clamp(28px, 6vw, 48px); 
+    color: var(--yellow); 
+    position: relative;
+    z-index: 2;
+    animation: titleGlow 2s ease-in-out infinite;
+  }
+  @keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 20px rgba(255,201,77,0.5); }
+    50% { text-shadow: 0 0 40px rgba(255,201,77,0.8), 0 0 60px rgba(255,201,77,0.4); }
+  }
+  
+  .footer-content {
+    max-width: 600px; 
+    margin: 0 auto 30px; 
+    text-align: center; 
+    line-height: 1.8;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-content p {
+    font-size: clamp(16px, 3.5vw, 20px); 
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+  .footer-content p:last-child {
+    font-size: clamp(15px, 3.2vw, 18px);
+    opacity: 0.8;
+  }
+  
+  .footer-decorations {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .footer-star {
+    position: absolute;
+    font-size: clamp(20px, 4vw, 30px);
+    animation: twinkle 1.5s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  
+  #btn-surprise {
+    background: var(--pink); 
+    color: #fff; 
+    font-size: clamp(16px, 4vw, 20px);
+    animation: glow 1.8s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 4px 4px 0 #000, 0 0 0 rgba(255,77,134,0); }
+    50% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255,77,134,0.7); }
+  }
+  .footer-note { 
+    font-family: 'Space Mono', monospace; 
+    font-size: 12px; 
+    letter-spacing: 0.1em; 
+    color: #a898bd;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Mobile Adjustments */
+  @media (max-width: 600px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .polaroid img { max-height: 150px; }
+    .polaroid { padding-bottom: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<!-- COVER SCREEN -->
+<div id="cover">
+  <div class="cover-ring" style="width:260px;height:260px;"></div>
+  <div class="cover-ring" style="width:340px;height:340px; animation-duration:45s; animation-direction:reverse;"></div>
+  <div class="cover-box">🎁</div>
+  <div class="cover-title">Hey Mahesh, this one's for you.</div>
+  <div class="cover-sub">tap the gift to open</div>
+</div>
+
+<!-- PAGE MULTI-STEP WRAPPER -->
+<div class="page-container">
+
+  <!-- PAGE 1: HERO -->
+  <section class="page active" id="hero">
+    <div class="balloon" style="left:8%; background:#FF4D86; animation-duration:11s; animation-delay:0s;"></div>
+    <div class="balloon" style="left:22%; background:#7C4DFF; animation-duration:9s; animation-delay:1.2s;"></div>
+    <div class="balloon" style="left:70%; background:#00BFA6; animation-duration:12.5s; animation-delay:0.6s;"></div>
+    <div class="balloon" style="left:84%; background:#FFC94D; animation-duration:10s; animation-delay:2s;"></div>
+
+    <div class="hero-inner">
+      <span class="ticket-tag">Admit One • Aug 10</span>
+      <h1 class="hero-name" id="heroName"></h1>
+      <p class="hero-sub">One more year, one more excuse for cake. Here's your very own interactive corner of the internet.</p>
+
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><div class="cd-num" id="cd-days">00</div><div class="cd-label">days</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">hrs</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">min</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">sec</div></div>
+      </div>
+
+      <button class="btn" id="btn-start">Let's Begin →</button>
+    </div>
+  </section>
+
+  <!-- PAGE 2: GIFT QUESTION -->
+  <section class="page" id="gift">
+    <div class="gift-card">
+      <span class="ticket-tag mono">one quick thing</span>
+      <h2 class="gift-q">Do you want a gift? 🎁</h2>
+      <p class="gift-hint">Choose wisely. One of these buttons has serious commitment issues.</p>
+
+      <div class="game-area" id="gameArea">
+        <div class="taunt" id="taunt">nice try 😏</div>
+        <button class="btn" id="btn-yes">Yes please 🎁</button>
+        <button class="btn" id="btn-no">No, I'm good</button>
+      </div>
+
+      <div class="gift-twist" id="giftTwist">
+        <p>Smart choice. Since you said no — you get something better than a gift: this interactive journey, custom-made for you. 😌</p>
+        <button class="btn" id="btn-continue">Explore Memories →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3: MEMORIES -->
+  <section class="page" id="memories">
+    <div class="mem-inner">
+      <div class="mem-head">
+        <span class="ticket-tag">a few frames</span>
+        <h2 class="mem-title">Moments Worth Replaying</h2>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="polaroid">
+          <span class="ticket-tag mem-tag">fit check</span>
+          <img src="mahesh-door.jpeg" alt="Mahesh standing in front of a carved wooden door">
+          <figcaption>Main character energy.</figcaption>
+        </div>
+        <div class="polaroid">
+          <span class="ticket-tag mem-tag">on stage</span>
+          <img src="mahesh-stage.jpeg" alt="Mahesh speaking on stage">
+          <figcaption>Certified legend moment.</figcaption>
+        </div>
+        <div class="polaroid">
+          <span class="ticket-tag mem-tag">casual mode</span>
+          <img src="mahesh-red.jpeg" alt="Mahesh in a red shirt">
+          <figcaption>Effortlessly cool.</figcaption>
+        </div>
+        <div class="polaroid">
+          <span class="ticket-tag mem-tag">crime scene</span>
+          <img src="mahesh-cake.jpeg" alt="Mahesh with cake on his face">
+          <figcaption>Evidence of a good birthday.</figcaption>
+        </div>
+      </div>
+
+      <button class="btn" id="btn-to-wishes">Read Special Message →</button>
+    </div>
+  </section>
+
+  <!-- PAGE 4: WISHES -->
+  <section class="page" id="wishes">
+    <div class="wish-inner">
+      <span class="ticket-tag mono">the actual message</span>
+      <div class="quote-mark">"</div>
+      <p class="wish-text">Mahesh, here's to another year of terrible puns, spontaneous plans, and you somehow being the calm one in every bit of chaos. Thank you for the laughs, the late-night talks, and for being exactly the kind of friend everyone deserves but very few actually get. Go make this year loud, ridiculous, and completely unforgettable.</p>
+      <div class="wish-sign">— someone genuinely lucky to know you</div>
+
+      <button class="btn" id="btn-to-footer">One Last Thing →</button>
+    </div>
+  </section>
+
+  <!-- PAGE 5: FOOTER -->
+  <section class="page" id="footer">
+    <div class="footer-decorations">
+      <div class="footer-star" style="top: 15%; left: 10%; animation-delay: 0s;">⭐</div>
+      <div class="footer-star" style="top: 25%; right: 15%; animation-delay: 0.3s;">✨</div>
+      <div class="footer-star" style="top: 60%; left: 20%; animation-delay: 0.6s;">🌟</div>
+      <div class="footer-star" style="top: 70%; right: 25%; animation-delay: 0.9s;">⭐</div>
+      <div class="footer-star" style="top: 40%; left: 50%; animation-delay: 1.2s;">✨</div>
+    </div>
+    
+    <h2 class="final-title">Happy Birthday, Mahesh! 🎂</h2>
+    
+    <div class="footer-content">
+      <p>This little corner of the internet was built just for you — with terrible puns, dodgy buttons, and enough confetti to last a lifetime.</p>
+      <p>May your year be filled with spontaneous adventures, legendary moments, and friends who make every day feel like your birthday.</p>
+    </div>
+
+    <button class="btn" id="btn-surprise">Tap for a Final Celebration 🎉</button>
+    <p class="footer-note">MADE WITH WAY TOO MUCH LOVE — AUG 10</p>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- Confetti Engine ---------------- */
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const colors = ['#FF4D86','#7C4DFF','#00BFA6','#FFC94D','#FFFFFF'];
+let particles = [];
+
+function launchConfetti(x, y, count=80, spread=1){
+  for(let i=0;i<count;i++){
+    const angle = (Math.random()*Math.PI*2);
+    const speed = (Math.random()*6+3) * spread;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle)*speed*0.6,
+      vy: Math.sin(angle)*speed - 4,
+      size: Math.random()*7+4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vr: (Math.random()-0.5)*12,
+      life: 0,
+      maxLife: 90+Math.random()*40,
+      shape: Math.random()>0.5 ? 'rect' : 'circle'
+    });
+  }
+}
+
+function tick(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.vy += 0.16;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.life++;
+    const alpha = Math.max(0, 1 - p.life/p.maxLife);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot*Math.PI/180);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = p.color;
+    if(p.shape==='rect'){
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0,0,p.size/2,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  particles = particles.filter(p=>p.life < p.maxLife && p.y < canvas.height+50);
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* ---------------- Page Navigation System ---------------- */
+function goToPage(pageId) {
+  const current = document.querySelector('.page.active');
+  const target = document.getElementById(pageId);
+  if (current && target && current !== target) {
+    current.classList.remove('active');
+    target.classList.add('active');
+  }
+}
+
+/* Cover screen */
+const cover = document.getElementById('cover');
+cover.addEventListener('click', ()=>{
+  launchConfetti(window.innerWidth/2, window.innerHeight*0.35, 140, 1.4);
+  cover.classList.add('hidden');
+  startHeroLetters();
+});
+
+/* Hero Name Letters */
+function startHeroLetters(){
+  const name = "MAHESH";
+  const el = document.getElementById('heroName');
+  if(el.dataset.done) return;
+  el.dataset.done = '1';
+  [...name].forEach((ch,i)=>{
+    const span = document.createElement('span');
+    span.textContent = ch;
+    span.style.animationDelay = (i*0.09)+'s';
+    el.appendChild(span);
+  });
+}
+setTimeout(startHeroLetters, 1200);
+
+/* Page Navigation Triggers */
+document.getElementById('btn-start').addEventListener('click', () => goToPage('gift'));
+document.getElementById('btn-to-wishes').addEventListener('click', () => goToPage('wishes'));
+document.getElementById('btn-to-footer').addEventListener('click', () => goToPage('footer'));
+
+/* ---------------- Countdown ---------------- */
+const target = new Date('2026-08-10T00:00:00+05:30').getTime();
+const elD = document.getElementById('cd-days');
+const elH = document.getElementById('cd-hours');
+const elM = document.getElementById('cd-mins');
+const elS = document.getElementById('cd-secs');
+let lastSec = null;
+
+function updateCountdown(){
+  const now = Date.now();
+  let diff = target - now;
+  if(diff <= 0){
+    elD.textContent='00'; elH.textContent='00'; elM.textContent='00'; elS.textContent='00';
+    document.querySelector('.hero-sub').textContent = "It's your day. Happy Birthday, Mahesh! 🎉";
+    return;
+  }
+  const d = Math.floor(diff/(1000*60*60*24));
+  const h = Math.floor((diff/(1000*60*60))%24);
+  const m = Math.floor((diff/(1000*60))%60);
+  const s = Math.floor((diff/1000)%60);
+  elD.textContent = String(d).padStart(2,'0');
+  elH.textContent = String(h).padStart(2,'0');
+  elM.textContent = String(m).padStart(2,'0');
+  elS.textContent = String(s).padStart(2,'0');
+  if(s !== lastSec){
+    document.getElementById('cd-secs').parentElement.classList.remove('pulse');
+    void document.getElementById('cd-secs').parentElement.offsetWidth;
+    document.getElementById('cd-secs').parentElement.classList.add('pulse');
+    lastSec = s;
+  }
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ---------------- Gift Dodge Game ---------------- */
+const gameArea = document.getElementById('gameArea');
+const btnYes = document.getElementById('btn-yes');
+const btnNo = document.getElementById('btn-no');
+const taunt = document.getElementById('taunt');
+const giftTwist = document.getElementById('giftTwist');
+const taunts = ["nice try 😏","almost!","nope 🙅","too slow!","can't catch me","not today"];
+let taBtnLocked = false;
+
+function dodge(){
+  const areaRect = gameArea.getBoundingClientRect();
+  const btnW = btnYes.offsetWidth || 140;
+  const btnH = btnYes.offsetHeight || 50;
+  const maxLeft = Math.max(areaRect.width - btnW, 10);
+  const maxTop = Math.max(areaRect.height - btnH, 10);
+  const newLeft = Math.random()*maxLeft;
+  const newTop = Math.random()*maxTop;
+  btnYes.style.left = newLeft + 'px';
+  btnYes.style.top = newTop + 'px';
+  taunt.textContent = taunts[Math.floor(Math.random()*taunts.length)];
+  taunt.style.left = (newLeft + btnW/2) + 'px';
+  taunt.style.top = (newTop - 26) + 'px';
+  taunt.classList.add('show');
+  clearTimeout(taBtnLocked);
+  taBtnLocked = setTimeout(()=> taunt.classList.remove('show'), 700);
+}
+
+['mouseenter','touchstart','pointerdown','click'].forEach(evt=>{
+  btnYes.addEventListener(evt, (e)=>{
+    e.preventDefault();
+    dodge();
+  }, {passive:false});
+});
+
+btnNo.addEventListener('click', ()=>{
+  const r = btnNo.getBoundingClientRect();
+  launchConfetti(r.left+r.width/2, r.top, 70, 1);
+  giftTwist.classList.add('show');
+  btnYes.style.display='none';
+  btnNo.style.display='none';
+  taunt.classList.remove('show');
+});
+
+document.getElementById('btn-continue').addEventListener('click', ()=>{
+  goToPage('memories');
+});
+
+/* ---------------- Finale Surprise ---------------- */
+document.getElementById('btn-surprise').addEventListener('click', (e)=>{
+  const r = e.target.getBoundingClientRect();
+  launchConfetti(r.left+r.width/2, r.top, 80, 1);
+  setTimeout(()=> launchConfetti(window.innerWidth*0.2, window.innerHeight*0.3, 90, 1.3), 150);
+  setTimeout(()=> launchConfetti(window.innerWidth*0.8, window.innerHeight*0.3, 90, 1.3), 300);
+});
+</script>
+</body>
+</html>
