@@ -306,7 +306,7 @@
   .taunt.show { opacity: 1; }
 
   .gift-twist {
-    margin-top: 14px; display: none; flex-direction: column; align-items: center; gap: 16px;
+    margin-top: 8px; display: none; flex-direction: column; align-items: center; gap: 12px;
   }
   .gift-twist.show { display: flex; }
   .gift-twist p { font-weight: 600; font-size: clamp(14px, 3.4vw, 17px); color: var(--ink); max-width: 460px; }
@@ -337,7 +337,7 @@
   .polaroid:nth-child(odd) { transform: rotate(-3deg); }
   .polaroid:nth-child(even) { transform: rotate(3deg); }
   .polaroid:hover { transform: rotate(0deg) scale(1.05); box-shadow: var(--shadow); z-index: 5; }
-  .mem-tag { position: absolute; top: 8px; right: 8px; font-size: 10px; z-index: 3; }
+  .mem-tag { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 10px; z-index: 3; }
 
   #btn-to-wishes { background: var(--turquoise); color: #fff; }
 
@@ -353,103 +353,11 @@
   .wish-inner .ticket-tag { margin-bottom: 14px; background: var(--yellow); color: var(--ink); }
   #btn-to-footer { background: var(--pink); color: #fff; }
 
-  /* PAGE 5: FOOTER & FINALE */
-  #footer { 
-    background: var(--ink); 
-    color: #fff; 
-    text-align: center; 
-    gap: 20px; 
-    position: relative;
-    overflow: hidden;
-  }
-  .final-title { 
-    font-size: clamp(28px, 6vw, 48px); 
-    color: var(--yellow); 
-    position: relative;
-    z-index: 2;
-    animation: titleGlow 2s ease-in-out infinite;
-  }
-  @keyframes titleGlow {
-    0%, 100% { text-shadow: 0 0 20px rgba(255,201,77,0.5); }
-    50% { text-shadow: 0 0 40px rgba(255,201,77,0.8), 0 0 60px rgba(255,201,77,0.4); }
-  }
-  
-  .footer-content {
-    max-width: 600px; 
-    margin: 0 auto 30px; 
-    text-align: center; 
-    line-height: 1.8;
-    position: relative;
-    z-index: 2;
-  }
-  .footer-content p {
-    font-size: clamp(16px, 3.5vw, 20px); 
-    margin-bottom: 20px;
-    opacity: 0.9;
-  }
-  .footer-content p:last-child {
-    font-size: clamp(15px, 3.2vw, 18px);
-    opacity: 0.8;
-  }
-  
-  .footer-decorations {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .footer-star {
-    position: absolute;
-    font-size: clamp(20px, 4vw, 30px);
-    animation: twinkle 1.5s ease-in-out infinite;
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-  }
-  
-  #btn-surprise {
-    background: var(--pink); 
-    color: #fff; 
-    font-size: clamp(16px, 4vw, 20px);
-    animation: glow 1.8s ease-in-out infinite;
-    position: relative;
-    z-index: 2;
-  }
-  @keyframes glow {
-    0%, 100% { box-shadow: 4px 4px 0 #000, 0 0 0 rgba(255,77,134,0); }
-    50% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255,77,134,0.7); }
-  }
-  .footer-note { 
-    font-family: 'Space Mono', monospace; 
-    font-size: 12px; 
-    letter-spacing: 0.1em; 
-    color: #a898bd;
-    position: relative;
-    z-index: 2;
-  }
-
   /* Mobile Adjustments */
   @media (max-width: 600px) {
     .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .polaroid img { max-height: 150px; }
     .polaroid { padding-bottom: 38px; }
-    
-    #footer {
-      justify-content: flex-start !important;
-      overflow-y: auto;
-      padding-top: clamp(40px, 10vh, 60px);
-      padding-bottom: clamp(40px, 10vh, 60px);
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-    .footer-content {
-      margin-bottom: 20px;
-      padding: 0 10px;
-    }
-    .footer-star {
-      font-size: 16px;
-    }
   }
 </style>
 </head>
@@ -562,30 +470,10 @@
       <p class="wish-text">Mahesh, here's to another year of terrible puns, spontaneous plans, and you somehow being the calm one in every bit of chaos. Thank you for the laughs, the late-night talks, and for being exactly the kind of friend everyone deserves but very few actually get. Go make this year loud, ridiculous, and completely unforgettable.</p>
       <div class="wish-sign">— someone genuinely lucky to know you</div>
 
-      <button class="btn" id="btn-to-footer">One Last Thing →</button>
+      <button class="btn" id="btn-to-footer">� Celebrate! �</button>
     </div>
   </section>
 
-  <!-- PAGE 5: FOOTER -->
-  <section class="page" id="footer">
-    <div class="footer-decorations">
-      <div class="footer-star" style="top: 15%; left: 10%; animation-delay: 0s;">⭐</div>
-      <div class="footer-star" style="top: 25%; right: 15%; animation-delay: 0.3s;">✨</div>
-      <div class="footer-star" style="top: 60%; left: 20%; animation-delay: 0.6s;">🌟</div>
-      <div class="footer-star" style="top: 70%; right: 25%; animation-delay: 0.9s;">⭐</div>
-      <div class="footer-star" style="top: 40%; left: 50%; animation-delay: 1.2s;">✨</div>
-    </div>
-    
-    <h2 class="final-title">Happy Birthday, Mahesh! 🎂</h2>
-    
-    <div class="footer-content">
-      <p>This little corner of the internet was built just for you — with terrible puns, dodgy buttons, and enough confetti to last a lifetime.</p>
-      <p>May your year be filled with spontaneous adventures, legendary moments, and friends who make every day feel like your birthday.</p>
-    </div>
-
-    <button class="btn" id="btn-surprise">Tap for a Final Celebration 🎉</button>
-    <p class="footer-note">MADE WITH WAY TOO MUCH LOVE — AUG 10</p>
-  </section>
 
 </div>
 
@@ -683,7 +571,11 @@ setTimeout(startHeroLetters, 1200);
 /* Page Navigation Triggers */
 document.getElementById('btn-start').addEventListener('click', () => goToPage('gift'));
 document.getElementById('btn-to-wishes').addEventListener('click', () => goToPage('wishes'));
-document.getElementById('btn-to-footer').addEventListener('click', () => goToPage('footer'));
+document.getElementById('btn-to-footer').addEventListener('click', () => {
+  launchConfetti(window.innerWidth/2, window.innerHeight/2, 150, 1.5);
+  setTimeout(()=> launchConfetti(window.innerWidth*0.3, window.innerHeight*0.4, 100, 1.2), 200);
+  setTimeout(()=> launchConfetti(window.innerWidth*0.7, window.innerHeight*0.4, 100, 1.2), 400);
+});
 
 /* ---------------- Countdown ---------------- */
 const target = new Date('2026-08-10T00:00:00+05:30').getTime();
@@ -785,19 +677,11 @@ btnNo.addEventListener('click', ()=>{
   // Show twist message after delay
   setTimeout(() => {
     giftTwist.classList.add('show');
-  }, 1500);
+  }, 500);
 });
 
 document.getElementById('btn-continue').addEventListener('click', ()=>{
   goToPage('memories');
-});
-
-/* ---------------- Finale Surprise ---------------- */
-document.getElementById('btn-surprise').addEventListener('click', (e)=>{
-  const r = e.target.getBoundingClientRect();
-  launchConfetti(r.left+r.width/2, r.top, 80, 1);
-  setTimeout(()=> launchConfetti(window.innerWidth*0.2, window.innerHeight*0.3, 90, 1.3), 150);
-  setTimeout(()=> launchConfetti(window.innerWidth*0.8, window.innerHeight*0.3, 90, 1.3), 300);
 });
 </script>
 </body>
