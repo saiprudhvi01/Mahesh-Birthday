@@ -377,6 +377,10 @@
 
 <canvas id="confetti-canvas"></canvas>
 
+<audio id="birthday-song" loop>
+  <source src="Aww%20Tera%20Happy%20BdayABCD%202%20Varun%20Dhawan%20Shraddha%20Kapoor%20Sachin%20-%20Jigar%20D.Soldierz%20%20Birthday%20song.mp3" type="audio/mpeg">
+</audio>
+
 <!-- COVER SCREEN -->
 <div id="cover">
   <div class="cover-ring" style="width:260px;height:260px;"></div>
@@ -567,6 +571,12 @@ cover.addEventListener('click', ()=>{
   launchConfetti(window.innerWidth/2, window.innerHeight*0.35, 140, 1.4);
   cover.classList.add('hidden');
   startHeroLetters();
+  
+  // Start playing birthday song
+  const audio = document.getElementById('birthday-song');
+  if (audio) {
+    audio.play().catch(e => console.log('Audio play failed:', e));
+  }
 });
 
 /* Hero Name Letters */
