@@ -305,12 +305,6 @@
   }
   .taunt.show { opacity: 1; }
 
-  .gift-twist {
-    margin-top: 8px; display: none; flex-direction: column; align-items: center; gap: 12px;
-  }
-  .gift-twist.show { display: flex; }
-  .gift-twist p { font-weight: 600; font-size: clamp(14px, 3.4vw, 17px); color: var(--ink); max-width: 460px; }
-  #btn-continue { background: var(--purple); color: #fff; }
 
   /* PAGE 3: MEMORIES GALLERY */
   #memories { background: var(--cream); }
@@ -337,7 +331,7 @@
   .polaroid:nth-child(odd) { transform: rotate(-3deg); }
   .polaroid:nth-child(even) { transform: rotate(3deg); }
   .polaroid:hover { transform: rotate(0deg) scale(1.05); box-shadow: var(--shadow); z-index: 5; }
-  .mem-tag { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 10px; z-index: 3; }
+  .mem-tag { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; z-index: 3; }
 
   #btn-to-wishes { background: var(--turquoise); color: #fff; }
 
@@ -352,6 +346,24 @@
   .wish-sign { font-family: 'Baloo 2', cursive; font-size: clamp(18px, 4.2vw, 26px); color: var(--yellow); margin-bottom: 28px; }
   .wish-inner .ticket-tag { margin-bottom: 14px; background: var(--yellow); color: var(--ink); }
   #btn-to-footer { background: var(--pink); color: #fff; }
+
+  /* PAGE 5: LAST PAGE */
+  #last-page {
+    background: linear-gradient(180deg, var(--cream) 0%, #FFE9B8 100%);
+  }
+  .last-page-inner {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+  }
+  .last-page-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin: 0 auto 30px;
+  }
 
   /* Mobile Adjustments */
   @media (max-width: 600px) {
@@ -419,11 +431,6 @@
         <button class="btn" id="btn-yes">Yes please 🎁</button>
         <button class="btn" id="btn-no">No, I'm good</button>
       </div>
-
-      <div class="gift-twist" id="giftTwist">
-        <p>Smart choice. Since you said no — you get something better than a gift: this interactive journey, custom-made for you. 😌</p>
-        <button class="btn" id="btn-continue">Explore Memories →</button>
-      </div>
     </div>
   </section>
 
@@ -470,10 +477,19 @@
       <p class="wish-text">Mahesh, here's to another year of terrible puns, spontaneous plans, and you somehow being the calm one in every bit of chaos. Thank you for the laughs, the late-night talks, and for being exactly the kind of friend everyone deserves but very few actually get. Go make this year loud, ridiculous, and completely unforgettable.</p>
       <div class="wish-sign">— someone genuinely lucky to know you</div>
 
-      <button class="btn" id="btn-to-footer">� Celebrate! �</button>
+      <button class="btn" id="btn-to-footer">🎉 Celebrate! 🎉</button>
     </div>
   </section>
 
+  <!-- PAGE 5: LAST PAGE -->
+  <section class="page" id="last-page">
+    <div class="last-page-inner">
+      <span class="ticket-tag">the grand finale</span>
+      <img src="last page.jpeg" alt="Birthday Finale" class="last-page-image">
+      <h2 style="font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 20px; color: var(--ink);">Happy Birthday, Mahesh! 🎂</h2>
+      <p style="font-size: clamp(14px, 3vw, 18px); color: #5a4a6b; max-width: 500px; margin: 0 auto; line-height: 1.6;">Wishing you the most amazing year ahead!</p>
+    </div>
+  </section>
 
 </div>
 
@@ -575,6 +591,9 @@ document.getElementById('btn-to-footer').addEventListener('click', () => {
   launchConfetti(window.innerWidth/2, window.innerHeight/2, 150, 1.5);
   setTimeout(()=> launchConfetti(window.innerWidth*0.3, window.innerHeight*0.4, 100, 1.2), 200);
   setTimeout(()=> launchConfetti(window.innerWidth*0.7, window.innerHeight*0.4, 100, 1.2), 400);
+  setTimeout(() => {
+    goToPage('last-page');
+  }, 800);
 });
 
 /* ---------------- Countdown ---------------- */
@@ -616,7 +635,6 @@ const gameArea = document.getElementById('gameArea');
 const btnYes = document.getElementById('btn-yes');
 const btnNo = document.getElementById('btn-no');
 const taunt = document.getElementById('taunt');
-const giftTwist = document.getElementById('giftTwist');
 const taunts = ["nice try 😏","almost!","nope 🙅","too slow!","can't catch me","not today"];
 let taBtnLocked = false;
 
@@ -669,19 +687,14 @@ btnNo.addEventListener('click', ()=>{
     }, 300);
   }
   
-  // Hide game buttons
+  // Hide game buttons and go to memories
   btnYes.style.display='none';
   btnNo.style.display='none';
   taunt.classList.remove('show');
   
-  // Show twist message after delay
   setTimeout(() => {
-    giftTwist.classList.add('show');
+    goToPage('memories');
   }, 500);
-});
-
-document.getElementById('btn-continue').addEventListener('click', ()=>{
-  goToPage('memories');
 });
 </script>
 </body>
