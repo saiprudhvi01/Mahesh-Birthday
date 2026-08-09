@@ -436,20 +436,19 @@
     .polaroid { padding-bottom: 38px; }
     
     #footer {
-      padding: 20px 15px;
-      justify-content: center !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
+      justify-content: flex-start !important;
+      overflow-y: auto;
+      padding-top: clamp(40px, 10vh, 60px);
+      padding-bottom: clamp(40px, 10vh, 60px);
+      padding-left: 15px;
+      padding-right: 15px;
     }
     .footer-content {
+      margin-bottom: 20px;
       padding: 0 10px;
     }
     .footer-star {
       font-size: 16px;
-    }
-    .final-title {
-      margin-top: 20px;
     }
   }
 </style>
