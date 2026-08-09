@@ -193,7 +193,95 @@
     background: var(--dash); background-size: 20px 6px;
   }
   .gift-q { font-size: clamp(24px, 5.5vw, 36px); font-weight: 700; margin: 14px 0 6px; color: var(--ink); }
-  .gift-hint { color: #6b5a7c; font-size: clamp(13px, 3vw, 16px); margin-bottom: 22px; }
+  .gift-hint { color: #6b5a7c; font-size: clamp(13px, 3vw, 16px); margin-bottom: 12px; }
+  
+  .cake-container {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 20px;
+  }
+  .cake-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .candle {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 30px;
+    background: linear-gradient(to bottom, #FF6B6B, #FF8E8E);
+    border-radius: 4px 4px 0 0;
+    z-index: 2;
+  }
+  .candle::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 10px;
+    background: #FFD93D;
+    border-radius: 2px;
+  }
+  .flame {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 16px;
+    background: radial-gradient(ellipse at bottom, #FF6B35, #FFD93D, transparent);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.3s ease-in-out infinite alternate;
+    z-index: 3;
+  }
+  .flame::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 10px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    animation: flicker 0.2s ease-in-out infinite alternate;
+  }
+  @keyframes flicker {
+    0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.9; }
+    100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; }
+  }
+  .blown-out {
+    animation: blowOut 0.5s ease-out forwards;
+  }
+  @keyframes blowOut {
+    0% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) scale(1.5); opacity: 0.5; }
+    100% { transform: translateX(-50%) scale(0); opacity: 0; }
+  }
+  .smoke {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: smokeRise 1s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes smokeRise {
+    0% { transform: translateX(-50%) translateY(0) scale(0.5); opacity: 0; }
+    20% { opacity: 0.6; }
+    100% { transform: translateX(-50%) translateY(-40px) scale(1.5); opacity: 0; }
+  }
 
   .game-area {
     position: relative; height: clamp(180px, 35vw, 220px); width: 100%;
@@ -346,6 +434,17 @@
     .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .polaroid img { max-height: 150px; }
     .polaroid { padding-bottom: 38px; }
+    
+    #footer {
+      padding: 20px 15px;
+      justify-content: center !important;
+    }
+    .footer-content {
+      padding: 0 10px;
+    }
+    .footer-star {
+      font-size: 16px;
+    }
   }
 </style>
 </head>
@@ -394,6 +493,13 @@
       <span class="ticket-tag mono">one quick thing</span>
       <h2 class="gift-q">Do you want a gift? 🎁</h2>
       <p class="gift-hint">Choose wisely. One of these buttons has serious commitment issues.</p>
+
+      <div class="cake-container" id="cakeContainer">
+        <img src="mahesh-cake.jpeg" alt="Birthday Cake" class="cake-image">
+        <div class="candle">
+          <div class="flame" id="candleFlame"></div>
+        </div>
+      </div>
 
       <div class="game-area" id="gameArea">
         <div class="taunt" id="taunt">nice try 😏</div>
@@ -645,6 +751,27 @@ function dodge(){
 btnNo.addEventListener('click', ()=>{
   const r = btnNo.getBoundingClientRect();
   launchConfetti(r.left+r.width/2, r.top, 70, 1);
+  
+  // Blow out candle effect
+  const flame = document.getElementById('candleFlame');
+  const cakeContainer = document.getElementById('cakeContainer');
+  
+  if (flame) {
+    flame.classList.add('blown-out');
+    
+    // Create smoke effect
+    setTimeout(() => {
+      const smoke = document.createElement('div');
+      smoke.className = 'smoke';
+      cakeContainer.appendChild(smoke);
+      
+      // Remove smoke after animation
+      setTimeout(() => {
+        smoke.remove();
+      }, 1000);
+    }, 300);
+  }
+  
   giftTwist.classList.add('show');
   btnYes.style.display='none';
   btnNo.style.display='none';
